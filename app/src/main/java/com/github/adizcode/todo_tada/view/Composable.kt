@@ -1,8 +1,11 @@
 package com.github.adizcode.todo_tada.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,15 +13,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Checkbox
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -46,12 +54,16 @@ fun TodoTada(viewModel: TodoViewModel) {
 
                 val todoList by viewModel.todoList.observeAsState(listOf())
 
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     TodoHeader(todoList.size)
                     TodoItemList(
                         todoList = todoList,
                         onTaskChange = viewModel::updateTodoTask,
-                        onDoneChange = viewModel::updateTodoDone
+                        onDoneChange = viewModel::updateTodoDone,
+                        onDeleteTodo = viewModel::deleteTodo
                     )
                 }
             }
@@ -85,22 +97,59 @@ fun NewTodoButton(onCreateTodo: () -> Unit) {
 fun TodoItemList(
     todoList: List<TodoItem>,
     onTaskChange: (TodoItem, String) -> Unit,
-    onDoneChange: (TodoItem, Boolean) -> Unit
+    onDoneChange: (TodoItem, Boolean) -> Unit,
+    onDeleteTodo: (TodoItem) -> Unit
 ) {
     LazyColumn(reverseLayout = true) {
-        items(items = todoList) { todoItem ->
-            TodoItemRowStateful(
-                task = todoItem.task,
-                onTaskChange = { updatedTask ->
-                    onTaskChange(todoItem, updatedTask)
-                },
-                isDone = todoItem.isDone,
-                onDoneChange = { isDoneUpdated ->
-                    onDoneChange(todoItem, isDoneUpdated)
-                }
-            )
+        items(items = todoList, key = { it.id }) { todoItem ->
+
+            DismissibleStateful(onDismiss = { onDeleteTodo(todoItem) }) {
+                TodoItemRowStateful(
+                    task = todoItem.task,
+                    onTaskChange = { updatedTask ->
+                        onTaskChange(todoItem, updatedTask)
+                    },
+                    isDone = todoItem.isDone,
+                    onDoneChange = { isDoneUpdated ->
+                        onDoneChange(todoItem, isDoneUpdated)
+                    }
+                )
+            }
         }
     }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun DismissibleStateful(onDismiss: () -> Unit, dismissContent: @Composable RowScope.() -> Unit) {
+    val dismissState = rememberDismissState(
+        confirmStateChange = { dismissValue ->
+            if (dismissValue == DismissValue.DismissedToStart) {
+                onDismiss()
+                return@rememberDismissState true
+            }
+            false
+        }
+    )
+
+    SwipeToDismiss(
+        state = dismissState,
+        background = {
+            val color = when (dismissState.dismissDirection) {
+                DismissDirection.EndToStart -> Color.Red
+                DismissDirection.StartToEnd -> Color.Transparent
+                null -> Color.Transparent
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp)
+                    .background(color)
+            )
+        },
+        dismissContent = dismissContent,
+        directions = setOf(DismissDirection.EndToStart)
+    )
 }
 
 @Composable
@@ -139,6 +188,7 @@ fun TodoItemRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colors.surface)
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
@@ -174,7 +224,8 @@ private fun TodoItemListPreview() {
                 TodoItem(0, "Learn Jetpack Compose", true)
             ),
             onTaskChange = { _, _ -> },
-            onDoneChange = { _, _ -> }
+            onDoneChange = { _, _ -> },
+            onDeleteTodo = { }
         )
     }
 }
