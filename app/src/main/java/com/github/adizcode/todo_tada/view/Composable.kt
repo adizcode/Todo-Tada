@@ -55,8 +55,7 @@ fun TodoTada(viewModel: TodoViewModel) {
                 val todoList by viewModel.todoList.observeAsState(listOf())
 
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     TodoHeader(todoList.size)
                     TodoItemList(
@@ -76,7 +75,7 @@ fun TodoHeader(count: Int) {
     Text(
         "You have $count todos",
         style = MaterialTheme.typography.h4,
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
     )
 }
 
@@ -190,7 +189,7 @@ fun TodoItemRow(
             .fillMaxWidth()
             .background(MaterialTheme.colors.surface)
             .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         OutlinedTextField(
