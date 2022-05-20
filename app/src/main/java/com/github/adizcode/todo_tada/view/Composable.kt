@@ -72,11 +72,16 @@ fun TodoTada(viewModel: TodoViewModel) {
 
 @Composable
 fun TodoHeader(count: Int) {
-    Text(
-        "You have $count todos",
-        style = MaterialTheme.typography.h4,
-        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
-    )
+    Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
+        Text(
+            "March 9, 2020",
+            style = MaterialTheme.typography.h4
+        )
+        Text(
+            "You have $count todos",
+            style = MaterialTheme.typography.h6,
+        )
+    }
 }
 
 @Composable
