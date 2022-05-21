@@ -1,17 +1,18 @@
 package com.github.adizcode.todo_tada.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Checkbox
 import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
@@ -19,7 +20,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.SwipeToDismiss
@@ -150,7 +150,7 @@ fun DismissibleStateful(onDismiss: () -> Unit, dismissContent: @Composable RowSc
         state = dismissState,
         background = {
             val color = when (dismissState.dismissDirection) {
-                DismissDirection.EndToStart -> Color.Red
+                DismissDirection.EndToStart -> Color.Transparent
                 DismissDirection.StartToEnd -> Color.Transparent
                 null -> Color.Transparent
             }
@@ -207,17 +207,17 @@ fun TodoItemRow(
             .fillMaxWidth()
             .background(MaterialTheme.colors.surface)
             .padding(horizontalPadding),
-        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        OutlinedTextField(
-            value = task,
-            onValueChange = onTaskChange,
-            Modifier.width(275.dp)
-        )
         Checkbox(
             checked = isDone,
             onCheckedChange = onDoneChange,
+        )
+        Spacer(Modifier.width(horizontalPadding))
+        BasicTextField(
+            value = task,
+            onValueChange = onTaskChange,
+            textStyle = MaterialTheme.typography.body1
         )
     }
 }
