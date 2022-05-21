@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.adizcode.todo_tada.model.TodoItem
 import com.github.adizcode.todo_tada.view.theme.TodoTadaTheme
@@ -53,16 +54,18 @@ fun TodoTada(viewModel: TodoViewModel) {
             }) {
 
                 val todoList by viewModel.todoList.observeAsState(listOf())
+                val horizontalPadding = 16.dp
 
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TodoHeader(todoList.size)
+                    TodoHeader(todoList.size, horizontalPadding)
                     TodoItemList(
                         todoList = todoList,
                         onTaskChange = viewModel::updateTodoTask,
                         onDoneChange = viewModel::updateTodoDone,
-                        onDeleteTodo = viewModel::deleteTodo
+                        onDeleteTodo = viewModel::deleteTodo,
+                        horizontalPadding = horizontalPadding
                     )
                 }
             }
@@ -71,8 +74,13 @@ fun TodoTada(viewModel: TodoViewModel) {
 }
 
 @Composable
-fun TodoHeader(count: Int) {
-    Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
+fun TodoHeader(count: Int, horizontalPadding: Dp) {
+    Column(
+        modifier = Modifier.padding(
+            horizontal = horizontalPadding,
+            vertical = 8.dp
+        )
+    ) {
         Text(
             "March 9, 2020",
             style = MaterialTheme.typography.h4
@@ -102,7 +110,8 @@ fun TodoItemList(
     todoList: List<TodoItem>,
     onTaskChange: (TodoItem, String) -> Unit,
     onDoneChange: (TodoItem, Boolean) -> Unit,
-    onDeleteTodo: (TodoItem) -> Unit
+    onDeleteTodo: (TodoItem) -> Unit,
+    horizontalPadding: Dp
 ) {
     LazyColumn(reverseLayout = true) {
         items(items = todoList, key = { it.id }) { todoItem ->
@@ -116,7 +125,8 @@ fun TodoItemList(
                     isDone = todoItem.isDone,
                     onDoneChange = { isDoneUpdated ->
                         onDoneChange(todoItem, isDoneUpdated)
-                    }
+                    },
+                    horizontalPadding = horizontalPadding
                 )
             }
         }
@@ -161,7 +171,8 @@ fun TodoItemRowStateful(
     task: String,
     onTaskChange: (String) -> Unit,
     isDone: Boolean,
-    onDoneChange: (Boolean) -> Unit
+    onDoneChange: (Boolean) -> Unit,
+    horizontalPadding: Dp
 ) {
 
     // Duplicated state for the UI to remember
@@ -178,7 +189,8 @@ fun TodoItemRowStateful(
         onDoneChange = { isVisibleDoneUpdated ->
             setVisibleDone(isVisibleDoneUpdated)
             onDoneChange(isVisibleDoneUpdated)
-        }
+        },
+        horizontalPadding = horizontalPadding
     )
 }
 
@@ -187,13 +199,14 @@ fun TodoItemRow(
     task: String,
     onTaskChange: (String) -> Unit,
     isDone: Boolean,
-    onDoneChange: (Boolean) -> Unit
+    onDoneChange: (Boolean) -> Unit,
+    horizontalPadding: Dp
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.surface)
-            .padding(16.dp),
+            .padding(horizontalPadding),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -213,7 +226,10 @@ fun TodoItemRow(
 @Composable
 private fun TodoHeaderPreview() {
     TodoTadaTheme {
-        TodoHeader(5)
+        TodoHeader(
+            count = 5,
+            horizontalPadding = 16.dp
+        )
     }
 }
 
@@ -229,7 +245,8 @@ private fun TodoItemListPreview() {
             ),
             onTaskChange = { _, _ -> },
             onDoneChange = { _, _ -> },
-            onDeleteTodo = { }
+            onDeleteTodo = { },
+            horizontalPadding = 16.dp
         )
     }
 }
