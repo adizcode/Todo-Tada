@@ -3,6 +3,8 @@ package com.github.adizcode.todo_tada.view.theme
 import androidx.compose.ui.graphics.Color
 
 val Navy = Color(0xFF3F4EA0)
+val Gray = Color(0xFF575767)
+val LightGray = Color(0xFFB9B9BE)
 
 val Purple200 = Color(0xFFBB86FC)
 val Purple500 = Color(0xFF6200EE)

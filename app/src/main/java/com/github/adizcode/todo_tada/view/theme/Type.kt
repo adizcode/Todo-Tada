@@ -20,7 +20,21 @@ val Typography = Typography(
     defaultFontFamily = Inter,
     h4 = TextStyle(
         fontWeight = FontWeight.Bold,
-        fontSize = 34.sp,
-        letterSpacing = 0.25.sp
-    )
+        fontSize = 32.sp
+    ),
+    body1 = TextStyle(
+        fontWeight = FontWeight.Medium,
+        fontSize = 18.sp,
+        color = Gray
+    ),
+    body2 = TextStyle(
+        fontWeight = FontWeight.Medium,
+        fontSize = 18.sp,
+        color = LightGray
+    ),
+    subtitle2 = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 14.sp,
+        color = Gray
+    ),
 )

@@ -87,7 +87,7 @@ fun TodoHeader(count: Int, horizontalPadding: Dp) {
         )
         Text(
             "You have $count todos",
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.subtitle2,
         )
     }
 }
