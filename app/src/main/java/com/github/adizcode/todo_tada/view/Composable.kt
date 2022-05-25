@@ -53,6 +53,8 @@ fun TodoTada(viewModel: TodoViewModel) {
             }) {
 
                 val todoList by viewModel.todoList.observeAsState(listOf())
+                val incompleteTodos by viewModel.incompleteTodos.observeAsState(listOf())
+                val completeTodos by viewModel.completeTodos.observeAsState(listOf())
                 val horizontalPadding = 16.dp
 
                 Column(
@@ -60,7 +62,7 @@ fun TodoTada(viewModel: TodoViewModel) {
                         .fillMaxWidth()
                         .padding(horizontal = horizontalPadding)
                 ) {
-                    TodoHeader(todoList.size)
+                    TodoHeader(incompleteTodos.size, completeTodos.size)
                     TodoItemList(
                         todoList = todoList,
                         onTaskChange = viewModel::updateTodoTask,
@@ -74,7 +76,7 @@ fun TodoTada(viewModel: TodoViewModel) {
 }
 
 @Composable
-fun TodoHeader(count: Int) {
+fun TodoHeader(incompleteTodosCount: Int, completeTodosCount: Int) {
     Column(
         modifier = Modifier.padding(vertical = 8.dp)
     ) {
@@ -83,7 +85,7 @@ fun TodoHeader(count: Int) {
             style = MaterialTheme.typography.h4
         )
         Text(
-            "You have $count todos",
+            "$incompleteTodosCount incomplete, $completeTodosCount complete",
             style = MaterialTheme.typography.subtitle2,
         )
     }
@@ -218,7 +220,7 @@ fun TodoItemRow(
 @Composable
 private fun TodoHeaderPreview() {
     TodoTadaTheme {
-        TodoHeader(count = 5)
+        TodoHeader(incompleteTodosCount = 5, completeTodosCount = 5)
     }
 }
 

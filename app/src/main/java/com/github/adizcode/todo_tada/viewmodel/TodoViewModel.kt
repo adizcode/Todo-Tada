@@ -12,6 +12,12 @@ class TodoViewModel(private val todoDao: TodoDao) : ViewModel() {
     val todoList: LiveData<List<TodoItem>>
         get() = todoDao.getAllTodos()
 
+    val incompleteTodos: LiveData<List<TodoItem>>
+        get() = todoDao.getIncompleteTodos()
+
+    val completeTodos: LiveData<List<TodoItem>>
+        get() = todoDao.getCompletedTodos()
+
     fun createTodo() {
         val newTodo = TodoItem(0, "Empty Todo", false)
         insertTodo(newTodo)
