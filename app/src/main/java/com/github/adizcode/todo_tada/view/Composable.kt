@@ -202,19 +202,19 @@ fun TodoItemRowStateful(
 ) {
 
     // Duplicated state for the UI to remember
-    val (visibleTask, setVisibleTask) = rememberSaveable { mutableStateOf(task) }
-    val (isVisibleDone, setVisibleDone) = rememberSaveable { mutableStateOf(isDone) }
+    val (taskNameInUi, setTaskNameInUi) = rememberSaveable { mutableStateOf(task) }
+    val (isTaskDoneInUi, setTaskDoneInUi) = rememberSaveable { mutableStateOf(isDone) }
 
     TodoItemRow(
-        task = visibleTask,
-        onTaskChange = { visibleTaskUpdated ->
-            setVisibleTask(visibleTaskUpdated)
-            onTaskChange(visibleTaskUpdated)
+        task = taskNameInUi,
+        onTaskChange = { taskNameInUiUpdated ->
+            setTaskNameInUi(taskNameInUiUpdated)
+            onTaskChange(taskNameInUiUpdated)
         },
-        isDone = isVisibleDone,
-        onDoneChange = { isVisibleDoneUpdated ->
-            setVisibleDone(isVisibleDoneUpdated)
-            onDoneChange(isVisibleDoneUpdated)
+        isDone = isTaskDoneInUi,
+        onDoneChange = { isTaskDoneInUiUpdated ->
+            setTaskDoneInUi(isTaskDoneInUiUpdated)
+            onDoneChange(isTaskDoneInUiUpdated)
         }
     )
 }
