@@ -9,9 +9,6 @@ import kotlinx.coroutines.launch
 
 class TodoViewModel(private val todoDao: TodoDao) : ViewModel() {
 
-    val todoList: LiveData<List<TodoItem>>
-        get() = todoDao.getAllTodos()
-
     val incompleteTodos: LiveData<List<TodoItem>>
         get() = todoDao.getIncompleteTodos()
 

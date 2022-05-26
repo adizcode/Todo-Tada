@@ -52,7 +52,6 @@ fun TodoTada(viewModel: TodoViewModel) {
                 NewTodoButton(onCreateTodo = viewModel::createTodo)
             }) {
 
-                val todoList by viewModel.todoList.observeAsState(listOf())
                 val incompleteTodos by viewModel.incompleteTodos.observeAsState(listOf())
                 val completeTodos by viewModel.completeTodos.observeAsState(listOf())
                 val horizontalPadding = 16.dp
@@ -63,9 +62,9 @@ fun TodoTada(viewModel: TodoViewModel) {
                         .padding(horizontal = horizontalPadding)
                 ) {
                     TodoHeader(incompleteTodos.size, completeTodos.size)
-                    TodoItemList(
-                        heading = "All Todos",
-                        todoList = todoList,
+                    TodoItemLists(
+                        incompleteTodos = incompleteTodos,
+                        completeTodos = completeTodos,
                         onTaskChange = viewModel::updateTodoTask,
                         onDoneChange = viewModel::updateTodoDone,
                         onDeleteTodo = viewModel::deleteTodo
@@ -101,6 +100,32 @@ fun NewTodoButton(onCreateTodo: () -> Unit) {
         Icon(
             imageVector = Icons.Filled.Add,
             contentDescription = "Create a new Todo"
+        )
+    }
+}
+
+@Composable
+fun TodoItemLists(
+    incompleteTodos: List<TodoItem>,
+    completeTodos: List<TodoItem>,
+    onTaskChange: (TodoItem, String) -> Unit,
+    onDoneChange: (TodoItem, Boolean) -> Unit,
+    onDeleteTodo: (TodoItem) -> Unit
+) {
+    Column {
+        TodoItemList(
+            heading = "Incomplete",
+            todoList = incompleteTodos,
+            onTaskChange = onTaskChange,
+            onDoneChange = onDoneChange,
+            onDeleteTodo = onDeleteTodo
+        )
+        TodoItemList(
+            heading = "Complete",
+            todoList = completeTodos,
+            onTaskChange = onTaskChange,
+            onDoneChange = onDoneChange,
+            onDeleteTodo = onDeleteTodo
         )
     }
 }
