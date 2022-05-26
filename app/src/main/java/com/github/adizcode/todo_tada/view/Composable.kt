@@ -64,6 +64,7 @@ fun TodoTada(viewModel: TodoViewModel) {
                 ) {
                     TodoHeader(incompleteTodos.size, completeTodos.size)
                     TodoItemList(
+                        heading = "All Todos",
                         todoList = todoList,
                         onTaskChange = viewModel::updateTodoTask,
                         onDoneChange = viewModel::updateTodoDone,
@@ -106,25 +107,29 @@ fun NewTodoButton(onCreateTodo: () -> Unit) {
 
 @Composable
 fun TodoItemList(
+    heading: String,
     todoList: List<TodoItem>,
     onTaskChange: (TodoItem, String) -> Unit,
     onDoneChange: (TodoItem, Boolean) -> Unit,
     onDeleteTodo: (TodoItem) -> Unit
 ) {
-    LazyColumn(reverseLayout = true) {
-        items(items = todoList, key = { it.id }) { todoItem ->
+    Column {
+        Text(heading, style = MaterialTheme.typography.h6)
+        LazyColumn(reverseLayout = true) {
+            items(items = todoList, key = { it.id }) { todoItem ->
 
-            DismissibleStateful(onDismiss = { onDeleteTodo(todoItem) }) {
-                TodoItemRowStateful(
-                    task = todoItem.task,
-                    onTaskChange = { updatedTask ->
-                        onTaskChange(todoItem, updatedTask)
-                    },
-                    isDone = todoItem.isDone,
-                    onDoneChange = { isDoneUpdated ->
-                        onDoneChange(todoItem, isDoneUpdated)
-                    }
-                )
+                DismissibleStateful(onDismiss = { onDeleteTodo(todoItem) }) {
+                    TodoItemRowStateful(
+                        task = todoItem.task,
+                        onTaskChange = { updatedTask ->
+                            onTaskChange(todoItem, updatedTask)
+                        },
+                        isDone = todoItem.isDone,
+                        onDoneChange = { isDoneUpdated ->
+                            onDoneChange(todoItem, isDoneUpdated)
+                        }
+                    )
+                }
             }
         }
     }
@@ -229,6 +234,7 @@ private fun TodoHeaderPreview() {
 private fun TodoItemListPreview() {
     TodoTadaTheme {
         TodoItemList(
+            heading = "Todos",
             todoList = listOf(
                 TodoItem(0, "Write Blog", false),
                 TodoItem(0, "Play Guitar", true),
