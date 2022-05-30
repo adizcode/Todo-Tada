@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Checkbox
 import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
+import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -61,13 +62,19 @@ fun TodoTada(viewModel: TodoViewModel) {
                         .fillMaxWidth()
                         .padding(horizontal = horizontalPadding)
                 ) {
-                    TodoHeader(incompleteTodos.size, completeTodos.size)
+                    TodoHeader(
+                        incompleteTodosCount = incompleteTodos.size,
+                        completeTodosCount = completeTodos.size,
+                        modifier = Modifier.padding(vertical = horizontalPadding * 3 / 4)
+                    )
+                    Divider()
                     TodoItemLists(
                         incompleteTodos = incompleteTodos,
                         completeTodos = completeTodos,
                         onTaskChange = viewModel::updateTodoTask,
                         onDoneChange = viewModel::updateTodoDone,
-                        onDeleteTodo = viewModel::deleteTodo
+                        onDeleteTodo = viewModel::deleteTodo,
+                        listModifier = Modifier.padding(vertical = horizontalPadding / 2)
                     )
                 }
             }
@@ -76,10 +83,8 @@ fun TodoTada(viewModel: TodoViewModel) {
 }
 
 @Composable
-fun TodoHeader(incompleteTodosCount: Int, completeTodosCount: Int) {
-    Column(
-        modifier = Modifier.padding(vertical = 8.dp)
-    ) {
+fun TodoHeader(incompleteTodosCount: Int, completeTodosCount: Int, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
         Text(
             "March 9, 2020",
             style = MaterialTheme.typography.h4
@@ -110,7 +115,8 @@ fun TodoItemLists(
     completeTodos: List<TodoItem>,
     onTaskChange: (TodoItem, String) -> Unit,
     onDoneChange: (TodoItem, Boolean) -> Unit,
-    onDeleteTodo: (TodoItem) -> Unit
+    onDeleteTodo: (TodoItem) -> Unit,
+    listModifier: Modifier = Modifier
 ) {
     Column {
         TodoItemList(
@@ -118,14 +124,16 @@ fun TodoItemLists(
             todoList = incompleteTodos,
             onTaskChange = onTaskChange,
             onDoneChange = onDoneChange,
-            onDeleteTodo = onDeleteTodo
+            onDeleteTodo = onDeleteTodo,
+            modifier = listModifier
         )
         TodoItemList(
             heading = "Complete",
             todoList = completeTodos,
             onTaskChange = onTaskChange,
             onDoneChange = onDoneChange,
-            onDeleteTodo = onDeleteTodo
+            onDeleteTodo = onDeleteTodo,
+            modifier = listModifier
         )
     }
 }
@@ -136,9 +144,10 @@ fun TodoItemList(
     todoList: List<TodoItem>,
     onTaskChange: (TodoItem, String) -> Unit,
     onDoneChange: (TodoItem, Boolean) -> Unit,
-    onDeleteTodo: (TodoItem) -> Unit
+    onDeleteTodo: (TodoItem) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(modifier) {
         Text(heading, style = MaterialTheme.typography.h6)
         LazyColumn(reverseLayout = true) {
             items(items = todoList, key = { it.id }) { todoItem ->
