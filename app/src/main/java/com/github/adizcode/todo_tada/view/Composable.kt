@@ -74,7 +74,7 @@ fun TodoTada(viewModel: TodoViewModel) {
                         onTaskChange = viewModel::updateTodoTask,
                         onDoneChange = viewModel::updateTodoDone,
                         onDeleteTodo = viewModel::deleteTodo,
-                        listModifier = Modifier.padding(vertical = horizontalPadding / 2)
+                        modifier = Modifier.padding(vertical = horizontalPadding / 2)
                     )
                 }
             }
@@ -116,54 +116,45 @@ fun TodoItemLists(
     onTaskChange: (TodoItem, String) -> Unit,
     onDoneChange: (TodoItem, Boolean) -> Unit,
     onDeleteTodo: (TodoItem) -> Unit,
-    listModifier: Modifier = Modifier
+    modifier: Modifier = Modifier
 ) {
-    Column {
-        TodoItemList(
-            heading = "Incomplete",
-            todoList = incompleteTodos,
-            onTaskChange = onTaskChange,
-            onDoneChange = onDoneChange,
-            onDeleteTodo = onDeleteTodo,
-            modifier = listModifier
-        )
-        TodoItemList(
-            heading = "Complete",
-            todoList = completeTodos,
-            onTaskChange = onTaskChange,
-            onDoneChange = onDoneChange,
-            onDeleteTodo = onDeleteTodo,
-            modifier = listModifier
-        )
+    LazyColumn(modifier = modifier) {
+        item {
+            ListHeading(heading = "Incomplete")
+        }
+        items(
+            items = incompleteTodos,
+            key = { it.id }
+        ) { todoItem ->
+            DismissibleTodoItemRow(
+                task = todoItem.task,
+                onTaskChange = { task -> onTaskChange(todoItem, task) },
+                isDone = todoItem.isDone,
+                onDoneChange = { isDone -> onDoneChange(todoItem, isDone) },
+                onDismiss = { onDeleteTodo(todoItem) }
+            )
+        }
+        item {
+            ListHeading(heading = "Completed")
+        }
+        items(
+            items = completeTodos,
+            key = { it.id }
+        ) { todoItem ->
+            DismissibleTodoItemRow(
+                task = todoItem.task,
+                onTaskChange = { task -> onTaskChange(todoItem, task) },
+                isDone = todoItem.isDone,
+                onDoneChange = { isDone -> onDoneChange(todoItem, isDone) },
+                onDismiss = { onDeleteTodo(todoItem) }
+            )
+        }
     }
 }
 
 @Composable
-fun TodoItemList(
-    heading: String,
-    todoList: List<TodoItem>,
-    onTaskChange: (TodoItem, String) -> Unit,
-    onDoneChange: (TodoItem, Boolean) -> Unit,
-    onDeleteTodo: (TodoItem) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier) {
-        Text(heading, style = MaterialTheme.typography.h6)
-        LazyColumn(reverseLayout = true) {
-            items(
-                items = todoList,
-                key = { it.id }
-            ) { todoItem ->
-                DismissibleTodoItemRow(
-                    task = todoItem.task,
-                    onTaskChange = { task -> onTaskChange(todoItem, task) },
-                    isDone = todoItem.isDone,
-                    onDoneChange = { isDone -> onDoneChange(todoItem, isDone) },
-                    onDismiss = { onDeleteTodo(todoItem) }
-                )
-            }
-        }
-    }
+fun ListHeading(heading: String) {
+    Text(heading, style = MaterialTheme.typography.h6)
 }
 
 @Composable
@@ -282,12 +273,15 @@ private fun TodoHeaderPreview() {
 @Composable
 private fun TodoItemListPreview() {
     TodoTadaTheme {
-        TodoItemList(
-            heading = "Todos",
-            todoList = listOf(
+        TodoItemLists(
+            incompleteTodos = listOf(
                 TodoItem(0, "Write Blog", false),
-                TodoItem(0, "Play Guitar", true),
-                TodoItem(0, "Learn Jetpack Compose", true)
+                TodoItem(9, "Play Guitar", false),
+                TodoItem(10, "Learn Jetpack Compose", false),
+            ),
+            completeTodos = listOf(
+                TodoItem(1, "Fix State Related Bug", true),
+                TodoItem(2, "Refactor Code", true),
             ),
             onTaskChange = { _, _ -> },
             onDoneChange = { _, _ -> },
