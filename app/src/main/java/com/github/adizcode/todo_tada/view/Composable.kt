@@ -32,7 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -211,8 +211,8 @@ fun TodoItemRowStateful(
 ) {
 
     // Duplicated state for the UI to remember
-    val (taskNameInUi, setTaskNameInUi) = rememberSaveable { mutableStateOf(task) }
-    val (isTaskDoneInUi, setTaskDoneInUi) = rememberSaveable { mutableStateOf(isDone) }
+    val (taskNameInUi, setTaskNameInUi) = remember { mutableStateOf(task) }
+    val (isTaskDoneInUi, setTaskDoneInUi) = remember { mutableStateOf(isDone) }
 
     TodoItemRow(
         task = taskNameInUi,
