@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "todo_items")
 data class TodoItem(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    @ColumnInfo var task: String,
-    @ColumnInfo(name = "is_done") var isDone: Boolean
+    @ColumnInfo val task: String,
+    @ColumnInfo(name = "is_done") val isDone: Boolean
 )

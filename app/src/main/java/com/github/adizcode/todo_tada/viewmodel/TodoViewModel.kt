@@ -27,13 +27,11 @@ class TodoViewModel(private val todoDao: TodoDao) : ViewModel() {
     }
 
     fun updateTodoTask(todoItem: TodoItem, task: String) {
-        todoItem.task = task
-        updateTodo(todoItem)
+        updateTodo(todoItem.copy(task = task))
     }
 
     fun updateTodoDone(todoItem: TodoItem, isDone: Boolean) {
-        todoItem.isDone = isDone
-        updateTodo(todoItem)
+        updateTodo(todoItem.copy(isDone = isDone))
     }
 
     private fun updateTodo(todoItem: TodoItem) {
