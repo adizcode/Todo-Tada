@@ -150,22 +150,37 @@ fun TodoItemList(
     Column(modifier) {
         Text(heading, style = MaterialTheme.typography.h6)
         LazyColumn(reverseLayout = true) {
-            items(items = todoList, key = { it.id }) { todoItem ->
-
-                DismissibleStateful(onDismiss = { onDeleteTodo(todoItem) }) {
-                    TodoItemRowStateful(
-                        task = todoItem.task,
-                        onTaskChange = { updatedTask ->
-                            onTaskChange(todoItem, updatedTask)
-                        },
-                        isDone = todoItem.isDone,
-                        onDoneChange = { isDoneUpdated ->
-                            onDoneChange(todoItem, isDoneUpdated)
-                        }
-                    )
-                }
+            items(
+                items = todoList,
+                key = { it.id }
+            ) { todoItem ->
+                DismissibleTodoItemRow(
+                    task = todoItem.task,
+                    onTaskChange = { task -> onTaskChange(todoItem, task) },
+                    isDone = todoItem.isDone,
+                    onDoneChange = { isDone -> onDoneChange(todoItem, isDone) },
+                    onDismiss = { onDeleteTodo(todoItem) }
+                )
             }
         }
+    }
+}
+
+@Composable
+fun DismissibleTodoItemRow(
+    task: String,
+    onTaskChange: (String) -> Unit,
+    isDone: Boolean,
+    onDoneChange: (Boolean) -> Unit,
+    onDismiss: () -> Unit
+) {
+    DismissibleStateful(onDismiss = onDismiss) {
+        TodoItemRowStateful(
+            task = task,
+            onTaskChange = onTaskChange,
+            isDone = isDone,
+            onDoneChange = onDoneChange
+        )
     }
 }
 
