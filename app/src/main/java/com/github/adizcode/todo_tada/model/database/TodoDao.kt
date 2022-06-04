@@ -19,6 +19,12 @@ interface TodoDao {
     @Delete
     suspend fun deleteTodo(todoItem: TodoItem)
 
+    @Query("SELECT * FROM todo_items WHERE is_done = 0")
+    fun getIncompleteTodos(): LiveData<List<TodoItem>>
+
+    @Query("SELECT * FROM todo_items WHERE is_done = 1")
+    fun getCompletedTodos(): LiveData<List<TodoItem>>
+
     @Query("SELECT * FROM todo_items")
     fun getAllTodos(): LiveData<List<TodoItem>>
 }
