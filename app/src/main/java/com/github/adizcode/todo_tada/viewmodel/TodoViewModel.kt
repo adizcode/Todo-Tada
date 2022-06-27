@@ -4,16 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.adizcode.todo_tada.model.TodoItem
-import com.github.adizcode.todo_tada.model.database.TodoDao
+import com.github.adizcode.todo_tada.model.repository.TodosRepository
 import kotlinx.coroutines.launch
 
-class TodoViewModel(private val todoDao: TodoDao) : ViewModel() {
+class TodoViewModel(private val todosRepository: TodosRepository) : ViewModel() {
 
-    val incompleteTodos: LiveData<List<TodoItem>>
-        get() = todoDao.getIncompleteTodos()
+    val incompleteTodos: LiveData<List<TodoItem>> = todosRepository.incompleteTodos
 
-    val completeTodos: LiveData<List<TodoItem>>
-        get() = todoDao.getCompletedTodos()
+    val completeTodos: LiveData<List<TodoItem>> = todosRepository.completedTodos
 
     fun createTodo() {
         val newTodo = TodoItem(0, "Empty Todo", false)
@@ -22,7 +20,7 @@ class TodoViewModel(private val todoDao: TodoDao) : ViewModel() {
 
     private fun insertTodo(todoItem: TodoItem) {
         viewModelScope.launch {
-            todoDao.insertTodos(todoItem)
+            todosRepository.insertTodo(todoItem)
         }
     }
 
@@ -36,13 +34,13 @@ class TodoViewModel(private val todoDao: TodoDao) : ViewModel() {
 
     private fun updateTodo(todoItem: TodoItem) {
         viewModelScope.launch {
-            todoDao.updateTodo(todoItem)
+            todosRepository.updateTodo(todoItem)
         }
     }
 
     fun deleteTodo(todoItem: TodoItem) {
         viewModelScope.launch {
-            todoDao.deleteTodo(todoItem)
+            todosRepository.deleteTodo(todoItem)
         }
     }
 }
